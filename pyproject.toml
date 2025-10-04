@@ -16,6 +16,12 @@ classifiers = [
 ]
 dynamic = ["version"]
 keywords = ["rope", "text", "editor", "buffer", "python", "rust"]
+dependencies = [
+    "hypothesis>=6.113.0",
+    "pytest>=8.3.5",
+    "pytest-randomly>=3.15.0",
+    "pytest-timeout>=2.4.0",
+]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
@@ -81,6 +87,7 @@ ignore = [
   "COM812", # trailing comma, conflicts with `ruff format`
   "D100",   # missing docstring in public module
   "D104",   # missing docstring in public package
+  "PLR6301"
 ]
 
 flake8-quotes.inline-quotes = "single"
@@ -89,6 +96,35 @@ pydocstyle.convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["S101", "PLR2004", "F841"]
+
+[tool.pytest.ini_options]
+# pytest configuration:
+# https://docs.pytest.org/en/stable/customize.html
+
+# Timeout for tests, so they can not take longer
+# than this amount of seconds.
+# You should adjust this value to be as low as possible.
+# Configuration:
+# https://pypi.org/project/pytest-timeout/
+timeout = 30
+
+# Strict `@xfail` by default:
+xfail_strict = true
+
+# Directories that are not visited by pytest collector:
+norecursedirs = [
+  "*.egg", ".eggs", "dist", "build", "docs",
+  ".tox", ".git", "__pycache__", ".hypothesis"
+]
+
+# You will need to measure your tests speed with `-n auto` and without it,
+# so you can see whether it gives you any performance gain, or just gives
+# you an overhead. See `docs/template/development-process.rst`.
+addopts = "--strict-markers --strict-config --tb=short"
+
+filterwarnings = [
+  "error"
+]
 
 [mypy]
 # Mypy configuration:
