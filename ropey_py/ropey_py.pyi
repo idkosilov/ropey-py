@@ -1,18 +1,5 @@
-"""ropey_py, a text rope implementation for efficient text editing.
-
-This module provides a Python interface to a Rust-based rope data structure
-for efficient text manipulation.
-"""
-
-from typing import Self
-
 class Rope:
-    """A rope data structure for efficient text editing operations.
-
-    A rope is a data structure for efficiently storing and manipulating large
-    texts. It provides efficient operations for insertion, deletion, and
-    substring extraction.
-    """
+    """A text rope data structure for efficient text manipulation."""
 
     def __init__(self, text: str) -> None:
         """Initialize a new Rope with the given text.
@@ -21,25 +8,54 @@ class Rope:
             text: The initial text content for the rope.
         """
 
-    def len_chars(self) -> int:
-        """Get the length of the rope in characters.
+    def insert(self, char_idx: int, text: str) -> None:
+        """Insert `text` at character index `char_idx`.
+
+        Args:
+            char_idx: The character index where to insert the text.
+            text: The text to insert.
+
+        Raises:
+            IndexError: If char_idx is out of range.
+        """
+
+    def remove(self, start_char: int, end_char: int) -> None:
+        """Remove characters in range `[start_char, end_char)`.
+
+        Args:
+            start_char: The starting character index (inclusive).
+            end_char: The ending character index (exclusive).
+
+        Raises:
+            IndexError: If the range is invalid or out of bounds.
+        """
+
+    def get_bytes(self) -> bytes:
+        """Return the whole rope as a `bytes` object.
 
         Returns:
-            The number of characters in the rope.
+            The rope content as bytes.
+        """
+
+    def len_chars(self) -> int:
+        """Get the number of characters in the rope.
+
+        Returns:
+            The character count.
         """
 
     def len_bytes(self) -> int:
-        """Get the length of the rope in bytes.
+        """Get the number of bytes in the rope.
 
         Returns:
-            The number of bytes in the rope.
+            The byte count.
         """
 
     def len_lines(self) -> int:
         """Get the number of lines in the rope.
 
         Returns:
-            The number of lines in the rope.
+            The line count.
         """
 
     def char(self, idx: int) -> str:
@@ -52,90 +68,55 @@ class Rope:
             The character at the specified index.
 
         Raises:
-            IndexError: If the index is out of range.
+            IndexError: If idx is out of range.
         """
 
     def line(self, line_idx: int) -> str:
-        """Get the line at the specified line index.
+        """Get the line at the specified index.
 
         Args:
             line_idx: The line index.
 
         Returns:
-            The line at the specified index.
+            The line content.
 
         Raises:
-            IndexError: If the line index is out of range.
+            IndexError: If line_idx is out of range.
         """
 
-    def to_string(self) -> str:
-        """Convert the rope to a string.
+    def as_str(self) -> str:
+        """Return the rope content as a string.
 
         Returns:
-            The string representation of the rope.
-        """
-
-    def insert(self, idx: int, text: str) -> None:
-        """Insert text at the specified character index.
-
-        Args:
-            idx: The character index where to insert the text.
-            text: The text to insert.
-
-        Raises:
-            IndexError: If the index is out of range.
-        """
-
-    def remove(self, start: int, end: int) -> None:
-        """Remove text in the specified character range.
-
-        Args:
-            start: The start character index (inclusive).
-            end: The end character index (exclusive).
-
-        Raises:
-            IndexError: If the range is invalid or out of range.
-        """
-
-    def split_off(self, at_char: int) -> Self:
-        """Split the rope into two at the specified character index.
-
-        Args:
-            at_char: The character index where to split.
-
-        Returns:
-            A new Rope containing the text after the split point.
-
-        Raises:
-            IndexError: If the split index is out of range.
+            The rope content as a string.
         """
 
     def slice(self, start: int, end: int) -> str:
-        """Get a substring of the rope in the specified character range.
+        """Get a slice of characters from the rope.
 
         Args:
-            start: The start character index (inclusive).
-            end: The end character index (exclusive).
+            start: The starting character index (inclusive).
+            end: The ending character index (exclusive).
 
         Returns:
-            The substring in the specified range.
+            The sliced string content.
 
         Raises:
-            IndexError: If the range is invalid or out of range.
+            IndexError: If the range is invalid or out of bounds.
         """
 
-    def byte_slice(self, start_byte: int, end_byte: int) -> str:
-        """Get a substring of the rope in the specified byte range.
+    def byte_slice(self, start_byte: int, end_byte: int) -> bytes:
+        """Get a slice of bytes from the rope.
 
         Args:
-            start_byte: The start byte index (inclusive).
-            end_byte: The end byte index (exclusive).
+            start_byte: The starting byte index (inclusive).
+            end_byte: The ending byte index (exclusive).
 
         Returns:
-            The substring in the specified byte range.
+            The sliced bytes content.
 
         Raises:
-            IndexError: If the range is invalid or out of range.
+            IndexError: If the range is invalid or out of bounds.
         """
 
     def byte_to_char(self, byte_idx: int) -> int:
@@ -148,7 +129,7 @@ class Rope:
             The corresponding character index.
 
         Raises:
-            IndexError: If the byte index is out of range.
+            IndexError: If byte_idx is out of range.
         """
 
     def char_to_byte(self, char_idx: int) -> int:
@@ -161,7 +142,7 @@ class Rope:
             The corresponding byte index.
 
         Raises:
-            IndexError: If the character index is out of range.
+            IndexError: If char_idx is out of range.
         """
 
     def char_to_line(self, char_idx: int) -> int:
@@ -171,36 +152,36 @@ class Rope:
             char_idx: The character index to convert.
 
         Returns:
-            The line index containing the character.
+            The corresponding line index.
 
         Raises:
-            IndexError: If the character index is out of range.
+            IndexError: If char_idx is out of range.
         """
 
     def line_to_char(self, line_idx: int) -> int:
-        """Get the character index of the start of a line.
+        """Convert a line index to a character index.
 
         Args:
-            line_idx: The line index.
+            line_idx: The line index to convert.
 
         Returns:
-            The character index of the start of the line.
+            The corresponding character index.
 
         Raises:
-            IndexError: If the line index is out of range.
+            IndexError: If line_idx is out of range.
         """
 
     def line_to_byte(self, line_idx: int) -> int:
-        """Get the byte index of the start of a line.
+        """Convert a line index to a byte index.
 
         Args:
-            line_idx: The line index.
+            line_idx: The line index to convert.
 
         Returns:
-            The byte index of the start of the line.
+            The corresponding byte index.
 
         Raises:
-            IndexError: If the line index is out of range.
+            IndexError: If line_idx is out of range.
         """
 
     def byte_to_line(self, byte_idx: int) -> int:
@@ -210,8 +191,42 @@ class Rope:
             byte_idx: The byte index to convert.
 
         Returns:
-            The line index containing the byte.
+            The corresponding line index.
 
         Raises:
-            IndexError: If the byte index is out of range.
+            IndexError: If byte_idx is out of range.
+        """
+
+    def byte_to_point(self, byte_idx: int) -> tuple[int, int]:
+        """Return `(line, column)` for a given *byte* offset.
+
+        Args:
+            byte_idx: The byte index to convert.
+
+        Returns:
+            A tuple of (line, column) indices.
+
+        Raises:
+            IndexError: If byte_idx is out of range.
+        """
+
+    def point_to_byte(self, line: int, column: int) -> int:
+        """Return byte offset for a given `(line, column)`.
+
+        Args:
+            line: The line index.
+            column: The column index.
+
+        Returns:
+            The corresponding byte index.
+
+        Raises:
+            IndexError: If line or column is out of range.
+        """
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Rope.
+
+        Returns:
+            A string representation of the Rope.
         """
