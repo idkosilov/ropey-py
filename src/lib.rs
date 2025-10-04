@@ -82,8 +82,11 @@ impl Rope {
             return Err(PyIndexError::new_err("byte slice range out of range"));
         }
         let slice = self.rope.byte_slice(start_byte..end_byte);
-        Ok(PyBytes::new(py, slice.as_bytes()))
+        let bytes: Vec<u8> = slice.bytes().collect();
+
+        Ok(PyBytes::new(py, &bytes))
     }
+
 
     fn byte_to_char(&self, byte_idx: usize) -> PyResult<usize> {
         if byte_idx > self.rope.len_bytes() {
@@ -107,14 +110,14 @@ impl Rope {
     }
 
     fn line_to_char(&self, line_idx: usize) -> PyResult<usize> {
-        if line_idx >= self.rope.len_lines() {
+        if line_idx > self.rope.len_lines() {
             return Err(PyIndexError::new_err("line index out of range"));
         }
         Ok(self.rope.line_to_char(line_idx))
     }
 
     fn line_to_byte(&self, line_idx: usize) -> PyResult<usize> {
-        if line_idx >= self.rope.len_lines() {
+        if line_idx > self.rope.len_lines() {
             return Err(PyIndexError::new_err("line index out of range"));
         }
         Ok(self.rope.line_to_byte(line_idx))
